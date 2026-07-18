@@ -25,6 +25,11 @@
   <url type="vcs-browser">https://github.com/Trendorin/Vacuo</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.1" date="2026-07-18">
+      <description>
+        <p>Maintenance release with corrected AppStream localization, strict Clang compatibility and current GitHub Actions.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-07-18">
       <description>
         <p>First public release with native Qt 6 interface, safe local cleanup, distribution adapters and a restricted PolicyKit helper.</p>

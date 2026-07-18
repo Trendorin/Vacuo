@@ -55,13 +55,13 @@ Vacuo не навязывает собственную тему. KDE Plasma, GNO
 Fedora:
 
 ```bash
-sudo dnf install ./vacuo-0.1.0-*.rpm
+sudo dnf install ./vacuo-*.rpm
 ```
 
 Debian / Ubuntu:
 
 ```bash
-sudo apt install ./vacuo_0.1.0_*.deb
+sudo apt install ./vacuo_*.deb
 ```
 
 Arch: скачайте `PKGBUILD` и архив исходников из одного релиза, проверьте их и выполните:

@@ -79,13 +79,13 @@ Download the package for your distribution from [GitHub Releases](https://github
 ### Fedora / RHEL family
 
 ```bash
-sudo dnf install ./vacuo-0.1.0-*.rpm
+sudo dnf install ./vacuo-*.rpm
 ```
 
 ### Debian / Ubuntu family
 
 ```bash
-sudo apt install ./vacuo_0.1.0_*.deb
+sudo apt install ./vacuo_*.deb
 ```
 
 ### Arch family
