@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(Vacuo
-    VERSION 0.1.2
+    VERSION 0.1.3
     DESCRIPTION "Native, safety-first Linux cache cleaner"
     HOMEPAGE_URL "https://github.com/Trendorin/Vacuo"
     LANGUAGES CXX
