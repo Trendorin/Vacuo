@@ -7,7 +7,8 @@ namespace vacuo {
 
 std::string jsonEscape(const std::string_view value) {
     std::ostringstream output;
-    for (const unsigned char character : value) {
+    for (const char rawCharacter : value) {
+        const auto character = static_cast<unsigned char>(rawCharacter);
         switch (character) {
         case '"':
             output << "\\\"";

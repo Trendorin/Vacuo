@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install build and validation tools
         run: |
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Configure core
         env:
           CC: clang
@@ -80,7 +80,7 @@ jobs:
       - name: Install tools
         run: dnf install --assumeyes cmake gcc-c++ git ninja-build qt6-qtbase-devel
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build and test
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON
@@ -95,7 +95,7 @@ jobs:
       - name: Install tools
         run: pacman -Syu --noconfirm --needed cmake git ninja qt6-base
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Build and test
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON

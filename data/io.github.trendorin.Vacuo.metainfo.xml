@@ -9,10 +9,8 @@
   <description>
     <p>Vacuo scans known rebuildable cache locations, explains the impact of each category, and cleans only explicit user selections.</p>
     <p>It detects major Linux distribution families, package managers, desktop sessions and the home filesystem. System actions are delegated to a restricted PolicyKit helper.</p>
-  </description>
-  <description xml:lang="ru">
-    <p>Vacuo сканирует известные каталоги восстанавливаемого кэша, объясняет последствия каждой категории и очищает только выбранные пользователем данные.</p>
-    <p>Приложение определяет семейство дистрибутива, пакетный менеджер, окружение рабочего стола и файловую систему домашнего каталога. Системные действия выполняет ограниченный PolicyKit helper.</p>
+    <p xml:lang="ru">Vacuo сканирует известные каталоги восстанавливаемого кэша, объясняет последствия каждой категории и очищает только выбранные пользователем данные.</p>
+    <p xml:lang="ru">Приложение определяет семейство дистрибутива, пакетный менеджер, окружение рабочего стола и файловую систему домашнего каталога. Системные действия выполняет ограниченный PolicyKit helper.</p>
   </description>
   <launchable type="desktop-id">io.github.trendorin.Vacuo.desktop</launchable>
   <provides>
