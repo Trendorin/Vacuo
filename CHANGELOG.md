@@ -9,6 +9,15 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 - Broader integration tests on distribution-native virtual machines.
 - Optional translation catalogs after the user-facing vocabulary stabilizes.
 
+## [0.1.2] - 2026-07-19
+
+### Changed
+
+- Replaced the application icon and compacted the project header around a consistent monochrome identity.
+- Rebuilt the README around verified capabilities, package installation, source builds and uninstallation.
+- Added complete Russian, Ukrainian and German README translations alongside the English default.
+- Clarified release artifacts and integrity verification without changing cleanup categories or privilege boundaries.
+
 ## [0.1.1] - 2026-07-18
 
 ### Fixed
@@ -34,6 +43,7 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 - DEB, RPM, source/TGZ and generated Arch packaging.
 - CI on Ubuntu, Fedora and Arch, ASan/UBSan, CodeQL, checksums, SPDX SBOM and provenance.
 
-[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Trendorin/Vacuo/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Trendorin/Vacuo/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Trendorin/Vacuo/releases/tag/v0.1.0
