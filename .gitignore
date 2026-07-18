@@ -1,0 +1,16 @@
+/build*/
+/dist/
+/.cache/
+/compile_commands.json
+/.clangd/
+/.idea/
+/.vscode/
+*.o
+*.a
+*.so
+*.deb
+*.rpm
+*.tar.gz
+*.sha256
+*~
+*.swp
