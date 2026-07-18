@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(Vacuo
-    VERSION 0.1.1
+    VERSION 0.1.2
     DESCRIPTION "Native, safety-first Linux cache cleaner"
     HOMEPAGE_URL "https://github.com/Trendorin/Vacuo"
     LANGUAGES CXX
@@ -134,10 +134,11 @@ install(FILES data/io.github.trendorin.Vacuo.desktop
 install(FILES data/io.github.trendorin.Vacuo.metainfo.xml
     DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo
 )
-install(FILES data/icons/hicolor/scalable/apps/io.github.trendorin.Vacuo.svg
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
+install(FILES data/icons/hicolor/512x512/apps/io.github.trendorin.Vacuo.png
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/512x512/apps
 )
-install(FILES README.md README_RU.md CHANGELOG.md SECURITY.md docs/PRIVACY.md docs/SECURITY_MODEL.md
+install(FILES README.md README.ru.md README.uk.md README.de.md
+    CHANGELOG.md SECURITY.md docs/PRIVACY.md docs/SECURITY_MODEL.md
     DESTINATION ${CMAKE_INSTALL_DOCDIR}
 )
 install(FILES LICENSE

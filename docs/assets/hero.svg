@@ -1,41 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
   <title id="title">Vacuo</title>
-  <desc id="desc">Native cache control for Linux, built with C++20 and Qt 6 Widgets.</desc>
+  <desc id="desc">Controlled cache cleanup for Linux, built with C++20 and Qt 6 Widgets.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1c1f22"/>
-      <stop offset="0.55" stop-color="#101214"/>
-      <stop offset="1" stop-color="#08090a"/>
+      <stop stop-color="#15191d"/>
+      <stop offset="1" stop-color="#080a0c"/>
     </linearGradient>
-    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#f4f4f4" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#f4f4f4" stop-opacity="0.65"/>
-      <stop offset="1" stop-color="#f4f4f4" stop-opacity="0"/>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#f7f8f9"/>
+      <stop offset="1" stop-color="#aeb5ba"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="360" fill="url(#bg)"/>
-  <g opacity="0.17" stroke="#e8eaec" fill="none">
-    <path d="M0 64h1200M0 296h1200"/>
-    <path d="M62 0v360M1138 0v360"/>
-    <path d="M770 0 602 360M920 0 752 360M1070 0 902 360"/>
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <g opacity=".14" stroke="#d8dde0">
+    <path d="M0 40h1200M0 280h1200M40 0v320M1160 0v320"/>
+    <path d="M860 0 720 320M1040 0 900 320M1220 0 1080 320"/>
   </g>
-  <rect x="72" y="68" width="112" height="112" fill="#f2f2f2"/>
-  <rect x="82" y="78" width="92" height="92" fill="#111315"/>
-  <path fill="#f2f2f2" d="M101 94h12l15 42 15-42h12l-21 58h-12z"/>
-  <path fill="#a8adb1" d="M96 152h64v5H96z"/>
-  <text x="72" y="249" fill="#f5f5f5" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif" font-size="76" font-weight="650" letter-spacing="2">VACUO</text>
-  <text x="74" y="291" fill="#aeb3b7" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif" font-size="22" letter-spacing="3">NATIVE CACHE CONTROL FOR LINUX</text>
-  <g transform="translate(760 82)" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif">
-    <text x="0" y="0" fill="#8d9398" font-size="14" letter-spacing="2">SYSTEM PROFILE</text>
-    <path d="M0 20h340" stroke="url(#line)"/>
-    <text x="0" y="66" fill="#f0f0f0" font-size="18">C++20 backend</text>
-    <text x="340" y="66" fill="#aeb3b7" font-size="16" text-anchor="end">NO ELECTRON</text>
-    <text x="0" y="113" fill="#f0f0f0" font-size="18">Qt 6 Widgets</text>
-    <text x="340" y="113" fill="#aeb3b7" font-size="16" text-anchor="end">SYSTEM THEME</text>
-    <text x="0" y="160" fill="#f0f0f0" font-size="18">Explicit cleanup plan</text>
-    <text x="340" y="160" fill="#aeb3b7" font-size="16" text-anchor="end">NO SURPRISES</text>
-    <text x="0" y="207" fill="#f0f0f0" font-size="18">Restricted helper</text>
-    <text x="340" y="207" fill="#aeb3b7" font-size="16" text-anchor="end">POLICYKIT</text>
+  <g transform="translate(72 62)">
+    <rect width="196" height="196" rx="14" fill="#101317" stroke="#4d555b" stroke-width="2"/>
+    <path d="M38 55h24l36 91 36-91h24l-49 124H87z" fill="url(#silver)"/>
+    <path d="m75 58 23 17 23-17-7 22-16 12-16-12zm10 39 13 10 13-10-4 15-9 8-9-8z" fill="#747d84"/>
   </g>
-  <rect x="0" y="352" width="1200" height="8" fill="#d7dade"/>
+  <g transform="translate(315 78)" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif">
+    <text x="0" y="80" fill="#f4f5f6" font-size="88" font-weight="720" letter-spacing="8">VACUO</text>
+    <text x="4" y="121" fill="#aab1b6" font-size="20" letter-spacing="4">CONTROLLED CACHE CLEANUP FOR LINUX</text>
+    <g transform="translate(4 154)" font-size="14" font-weight="600" letter-spacing="1">
+      <rect width="92" height="32" fill="#22282d" stroke="#4d555b"/><text x="16" y="21" fill="#dfe2e4">C++20</text>
+      <rect x="104" width="142" height="32" fill="#22282d" stroke="#4d555b"/><text x="120" y="21" fill="#dfe2e4">QT 6 WIDGETS</text>
+      <rect x="258" width="132" height="32" fill="#22282d" stroke="#4d555b"/><text x="274" y="21" fill="#dfe2e4">LINUX NATIVE</text>
+      <rect x="402" width="146" height="32" fill="#22282d" stroke="#4d555b"/><text x="418" y="21" fill="#dfe2e4">NO TELEMETRY</text>
+    </g>
+  </g>
+  <rect y="314" width="1200" height="6" fill="#c7ccd0"/>
 </svg>

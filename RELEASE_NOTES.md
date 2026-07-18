@@ -1,27 +1,31 @@
-# Vacuo 0.1.1
+# Vacuo 0.1.2
 
-Vacuo 0.1.1 is the verified public baseline: native Qt 6 Widgets, a dependency-light C++20 core, explicit cleanup plans and a narrow PolicyKit boundary.
-
-## Changes since 0.1.0
-
-- Correct AppStream localization that passes strict Ubuntu validation.
-- Clean Clang 18 build with `-Wconversion -Werror` and ASan/UBSan.
-- Current `actions/checkout@v7`, `github/codeql-action@v4` and provenance attestation action.
-- No cleanup boundary or category behavior changed.
+Vacuo 0.1.2 refreshes the application identity and makes installation, source builds and removal straightforward in English, Russian, Ukrainian and German. Cleanup behavior and the PolicyKit boundary are unchanged from 0.1.1.
 
 ## Included
 
-- DEB and RPM packages, an installable TGZ tree, source archive and generated Arch `PKGBUILD`.
-- Distribution adapters for Fedora/RHEL, Arch, Debian/Ubuntu, openSUSE and Alpine.
-- User cache, thumbnails, browsers, developer tools, Flatpak app cache, Steam cache and Trash categories.
-- Separately authorized package-cache, journal, coredump and Snap actions.
-- `vacuoctl` with stable scan/clean JSON schemas.
-- `SHA256SUMS`, SPDX 2.3 SBOM and GitHub build-provenance attestations.
+| Asset | Purpose |
+|---|---|
+| `vacuo_0.1.2_amd64.deb` | Debian / Ubuntu package |
+| `vacuo-0.1.2-1.x86_64.rpm` | Fedora / RHEL package |
+| `PKGBUILD` | Arch-family package recipe |
+| `vacuo-0.1.2-x86_64.tar.gz` | Installable Linux tree |
+| `vacuo-0.1.2-source.tar.gz` | Release source |
+| `vacuo-0.1.2.spdx` | SPDX 2.3 software bill of materials |
+| `SHA256SUMS` | Integrity manifest for every asset |
 
-## Important behavior
+## Changes
 
-- Vacuo permanently removes selected cache.
-- Browser profiles, cookies, history, passwords, application settings, downloads, projects, games and saves are outside the target catalog.
-- The GUI must run as a normal user. System categories prompt through PolicyKit.
-- Arch package-cache cleanup needs `pacman-contrib`; Vacuo does not fall back to `pacman -Scc`.
-- No AppImage is published: the privileged helper and PolicyKit policy require a native system installation, and shipping a misleading partially functional bundle would be worse than providing correct native packages.
+- New high-contrast application icon and compact repository header.
+- English default README plus complete RU, UK and DE documentation.
+- Exact package, source-build and uninstall commands.
+- Clearer tables for cleanup scope, preserved data and distribution adapters.
+
+## Safety
+
+- Run the GUI as a normal user; system actions request PolicyKit authorization separately.
+- Review selected categories before cleaning. Selected cache and Trash contents are deleted permanently.
+- Browser profiles, cookies, history, passwords, settings, projects, games and saves remain outside the cleanup catalog.
+- Arch package-cache cleanup requires `pacman-contrib`; Vacuo does not use `pacman -Scc`.
+
+Verify downloads with `sha256sum --ignore-missing --check SHA256SUMS`.

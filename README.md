@@ -1,106 +1,78 @@
 <p align="center">
-  <img src="docs/assets/hero.svg" width="100%" alt="Vacuo — native cache control for Linux">
+  <img src="docs/assets/hero.svg" width="100%" alt="Vacuo — controlled Linux cache cleanup">
 </p>
 
 <p align="center">
-  <a href="https://github.com/Trendorin/Vacuo/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Trendorin/Vacuo/ci.yml?branch=main&amp;style=flat-square&amp;label=build&amp;labelColor=111315&amp;color=555b60"></a>
-  <a href="https://github.com/Trendorin/Vacuo/security/code-scanning"><img alt="CodeQL" src="https://img.shields.io/github/actions/workflow/status/Trendorin/Vacuo/codeql.yml?branch=main&amp;style=flat-square&amp;label=CodeQL&amp;labelColor=111315&amp;color=555b60"></a>
-  <a href="https://github.com/Trendorin/Vacuo/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Trendorin/Vacuo?style=flat-square&amp;label=release&amp;labelColor=111315&amp;color=555b60"></a>
-  <a href="LICENSE"><img alt="GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-555b60?style=flat-square&amp;labelColor=111315"></a>
+  <a href="README.md"><img alt="English" src="https://img.shields.io/badge/EN-English-d7dade?style=flat-square&labelColor=15181b"></a>
+  <a href="README.ru.md"><img alt="Русский" src="https://img.shields.io/badge/RU-Русский-d7dade?style=flat-square&labelColor=15181b"></a>
+  <a href="README.uk.md"><img alt="Українська" src="https://img.shields.io/badge/UK-Українська-d7dade?style=flat-square&labelColor=15181b"></a>
+  <a href="README.de.md"><img alt="Deutsch" src="https://img.shields.io/badge/DE-Deutsch-d7dade?style=flat-square&labelColor=15181b"></a>
 </p>
 
 <p align="center">
-  <a href="#install"><img alt="Install" src="https://img.shields.io/badge/INSTALL-2d3135?style=for-the-badge"></a>
-  <a href="#safety"><img alt="Safety" src="https://img.shields.io/badge/SAFETY-2d3135?style=for-the-badge"></a>
-  <a href="https://github.com/Trendorin/Vacuo/releases"><img alt="Releases" src="https://img.shields.io/badge/RELEASES-2d3135?style=for-the-badge"></a>
-  <a href="README_RU.md"><img alt="Русская версия" src="https://img.shields.io/badge/РУССКАЯ_ВЕРСИЯ-2d3135?style=for-the-badge"></a>
+  <a href="https://github.com/Trendorin/Vacuo/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Trendorin/Vacuo/ci.yml?branch=main&style=flat-square&label=build&labelColor=15181b&color=5d666d"></a>
+  <a href="https://github.com/Trendorin/Vacuo/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Trendorin/Vacuo?style=flat-square&label=release&labelColor=15181b&color=5d666d"></a>
+  <img alt="C++20" src="https://img.shields.io/badge/C%2B%2B-20-5d666d?style=flat-square&labelColor=15181b">
+  <img alt="Qt 6 Widgets" src="https://img.shields.io/badge/Qt-6_Widgets-5d666d?style=flat-square&labelColor=15181b">
+  <a href="LICENSE"><img alt="GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-5d666d?style=flat-square&labelColor=15181b"></a>
 </p>
 
-Vacuo is a native Linux cache cleaner with a C++20 backend and a Qt 6 Widgets interface. It scans first, explains every category, and changes only what the user explicitly selects. There is no Electron runtime, telemetry, account, cloud service, or background daemon.
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#build-from-source">Source</a> ·
+  <a href="#uninstall">Uninstall</a> ·
+  <a href="docs/SECURITY_MODEL.md">Security</a> ·
+  <a href="https://github.com/Trendorin/Vacuo/releases">Releases</a>
+</p>
 
-## What makes it different
+Vacuo is a native Linux utility that measures known cache locations, shows exactly what can be removed, and cleans only selected categories. It uses a C++20 core and a Qt 6 Widgets interface that follows the active desktop theme. No Electron, telemetry, account, cloud service, or background daemon.
 
-| Native by default | Explicit cleanup | Small privilege boundary |
-|---|---|---|
-| Standard Qt Widgets, normal system window frame, desktop icon theme and palette. | Read-only scan, per-category sizes, risk labels, warnings and a final confirmation. | The GUI never runs as root. A PolicyKit helper accepts fixed action IDs—not paths or shell commands. |
+## What it does
 
-Vacuo does not install a custom visual theme. KDE Plasma, GNOME, Xfce, Cinnamon, LXQt and Wayland compositors keep control through the system Qt style and palette.
+| Scope | Included | Default |
+|---|---|:---:|
+| Rebuildable user data | Application cache and thumbnails | On |
+| Optional user data | Browser, developer, Flatpak and Steam caches | Off |
+| Permanent user data | Trash files and Trash metadata | Off |
+| System data | Package cache, archived journal, coredumps and Snap cache | Off + PolicyKit |
 
-## Capabilities
+Browser profiles, cookies, history, passwords, application settings, projects, games and saves are not targets. Unknown distributions receive only conservative XDG user rules; Vacuo never guesses a package-manager command.
 
-- Detects `/etc/os-release`, distribution family, package manager, desktop session, Wayland/X11 and the filesystem mounted for the home directory.
-- Scans allocated disk usage without following symbolic links.
-- Separates low-risk rebuildable cache from browser, developer, gaming, Trash and privileged system categories.
-- Supports DNF/DNF5, pacman through `paccache`, APT, zypper and APK cache cleanup.
-- Vacuums archived systemd journal data older than 14 days; active journal files stay intact.
-- Provides `vacuoctl` with stable JSON schemas for audit and automation.
-- Builds without third-party C++ dependencies beyond Qt for the GUI.
+### Supported systems
 
-### Cleanup catalog
+| Distribution family | Package-cache adapter |
+|---|---|
+| Fedora / RHEL | `dnf5 clean all` or `dnf clean all` |
+| Arch / CachyOS / Manjaro | `paccache -rk2` |
+| Debian / Ubuntu | `apt-get clean` |
+| openSUSE / SLES | `zypper --non-interactive clean --all` |
+| Alpine | `apk cache clean` |
 
-| Category | Scope | Default | Behavior |
-|---|---:|:---:|---|
-| Application cache | User | On | Clears general `$XDG_CACHE_HOME` content, excluding separately listed groups. |
-| Thumbnails | User | On | Clears Freedesktop thumbnail previews. |
-| Browser cache | User | Off | Clears cache directories only; profiles, cookies, history, passwords and extensions are not targets. |
-| Developer cache | User | Off | npm, Gradle, Cargo, pip, uv, Go, Yarn and supported IDE caches. |
-| Flatpak app cache | User | Off | Only `~/.var/app/<app-id>/cache`; settings and application data remain. |
-| Steam cache | User | Off | Shader and embedded web caches; game data and saves remain. |
-| Trash | User | Off | Permanently removes Trash files and metadata. |
-| Package cache | System | Off | Uses the detected package manager through the restricted helper. |
-| Journal / crash dumps / Snap cache | System | Off | Fixed system actions, each selected separately. |
-
-Unknown distributions receive only the safe XDG/user rules. Vacuo does not guess a package-manager command.
-
-<a id="safety"></a>
-## Safety
-
-Vacuo treats deletion as a security boundary, not a convenience function.
-
-- The GUI and CLI refuse to clean while running as root.
-- User targets come from a compiled, exact allow-list. There is no arbitrary-path field.
-- `/`, the home directory, configuration roots and broad data roots are hard-denied.
-- Every target must be a real directory owned by the current user; symlinked path components are rejected.
-- Traversal uses descriptor-relative `openat`, `fstatat` and `unlinkat` with no-follow flags, limiting symlink swaps and path traversal.
-- The helper is not setuid. PolicyKit starts it only when a selected system action needs authorization.
-- The helper accepts four fixed identifiers and launches absolute, allow-listed executables without a shell.
-- Concurrent privileged runs are blocked by an exclusive lock.
-- Arch cleanup requires `paccache`; Vacuo deliberately refuses the destructive `pacman -Scc` fallback.
-
-See the complete [security model](docs/SECURITY_MODEL.md), [privacy statement](docs/PRIVACY.md), and [vulnerability policy](SECURITY.md).
-
-Vacuo permanently deletes selected cache. Run the scan, read warnings, close affected applications, and keep backups of data that is not reproducible.
+KDE Plasma, GNOME, Xfce, Cinnamon, LXQt, Wayland and X11 keep control of the window frame, palette and Qt style.
 
 <a id="install"></a>
 ## Install
 
-Download the package for your distribution from [GitHub Releases](https://github.com/Trendorin/Vacuo/releases/latest). Every release includes `SHA256SUMS`, an SPDX SBOM, source archive and build-provenance attestation.
+Download the matching asset from the [latest release](https://github.com/Trendorin/Vacuo/releases/latest).
 
-### Fedora / RHEL family
+| System | Asset | Command |
+|---|---|---|
+| Fedora / RHEL | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
+| Debian / Ubuntu | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
+| Arch family | `PKGBUILD` | `makepkg -si` |
 
-```bash
-sudo dnf install ./vacuo-*.rpm
-```
+On Arch, install `pacman-contrib` to enable safe package-cache cleanup. Vacuo deliberately has no `pacman -Scc` fallback.
 
-### Debian / Ubuntu family
-
-```bash
-sudo apt install ./vacuo_*.deb
-```
-
-### Arch family
-
-Download `PKGBUILD` and the source archive from the same release, then inspect and build it:
+Verify downloaded files with the release manifest:
 
 ```bash
-makepkg -si
+sha256sum --ignore-missing --check SHA256SUMS
 ```
 
-Install `pacman-contrib` to enable the safe package-cache adapter.
+<a id="build-from-source"></a>
+## Build from source
 
-### Build from source
-
-Requirements: a C++20 compiler, CMake 3.24+, Ninja or Make, Qt 6.4+ (`Widgets` and `Concurrent`), and PolicyKit at runtime for system actions.
+Requirements: CMake 3.24+, a C++20 compiler, Ninja or Make, Qt 6.4+ (`Widgets`, `Concurrent`) and PolicyKit for system actions.
 
 ```bash
 git clone https://github.com/Trendorin/Vacuo.git
@@ -113,55 +85,43 @@ ctest --test-dir build --output-on-failure
 sudo cmake --install build
 ```
 
-The installed helper is a normal root-owned `0755` executable. Do not add setuid/setgid bits.
+The installed helper must remain a regular root-owned `0755` executable. Never add setuid or setgid bits.
+
+<a id="uninstall"></a>
+## Uninstall
+
+| Installation | Command |
+|---|---|
+| Fedora / RHEL | `sudo dnf remove vacuo` |
+| Debian / Ubuntu | `sudo apt remove vacuo` |
+| Arch family | `sudo pacman -Rns vacuo` |
+| Source build | `sudo xargs -r -d '\n' rm -- < build/install_manifest.txt` |
+
+Optional: remove saved window geometry with `rm -f "$HOME/.config/Trendorin/Vacuo.conf"`.
+
+## Safety model
+
+- Scan is read-only; cleanup always requires an explicit selection and confirmation.
+- GUI and CLI refuse cleanup when run as root.
+- User targets come from an exact compiled allow-list; arbitrary paths are not accepted.
+- Symlinked components and protected roots are rejected before descriptor-relative deletion.
+- The non-setuid PolicyKit helper accepts four fixed system action IDs and never executes a shell command supplied by the user.
+
+Read the [security model](docs/SECURITY_MODEL.md), [privacy statement](docs/PRIVACY.md), and [vulnerability policy](SECURITY.md).
 
 ## CLI
 
 ```bash
 vacuoctl system
 vacuoctl list
-vacuoctl scan
 vacuoctl scan --json
 vacuoctl clean --category thumbnails --category application-cache --yes
 ```
 
-There is intentionally no implicit `clean all`. System categories use the same PolicyKit helper as the GUI.
+There is intentionally no implicit `clean all` command.
 
-## Distribution adapters
+## Project
 
-| Family | Detection | Package-cache action |
-|---|---|---|
-| Fedora, RHEL, Rocky, Alma | `ID` / `ID_LIKE` | `dnf5 clean all` or `dnf clean all` |
-| Arch, CachyOS, Manjaro, EndeavourOS | `ID` / `ID_LIKE` | `paccache -rk2` |
-| Debian, Ubuntu, Mint, Pop!_OS, Kali | `ID` / `ID_LIKE` | `apt-get clean` |
-| openSUSE / SLES | `ID` / `ID_LIKE` | `zypper --non-interactive clean --all` |
-| Alpine | `ID` / `ID_LIKE` | `apk cache clean` |
-| NixOS / unknown | detected | package-cache cleanup disabled |
+[Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Contributors](CONTRIBUTORS.md) · [Support](SUPPORT.md)
 
-Filesystem detection is informational and mount-aware. Deletion remains filesystem-agnostic and uses Linux VFS APIs; Vacuo does not run filesystem repair or snapshot commands.
-
-## Development
-
-The core has no Qt dependency and can be tested on a minimal Linux system:
-
-```bash
-./tests/run-core-tests.sh
-```
-
-The full build is checked on Ubuntu, Fedora and Arch. A separate Clang job runs AddressSanitizer and UndefinedBehaviorSanitizer; CodeQL analyzes every main-branch change.
-
-Before contributing a rule, read [CONTRIBUTING.md](CONTRIBUTING.md). New privileged behavior must use a fixed action identifier, an absolute command allow-list, negative tests, and documentation of what is preserved.
-
-## Project policy
-
-- [Changelog](CHANGELOG.md)
-- [Security policy](SECURITY.md)
-- [Privacy](docs/PRIVACY.md)
-- [Contributors](CONTRIBUTORS.md)
-- [Support](SUPPORT.md)
-
-Vacuo is maintained by [Trendorin](https://github.com/Trendorin). Community contributors are listed by Git history and the [contributors graph](https://github.com/Trendorin/Vacuo/graphs/contributors); no fabricated contributor list is kept.
-
-## License
-
-Copyright © 2026 Trendorin. Licensed under [GNU GPL v3 or later](LICENSE). Contributions are accepted under the same license.
+Maintained by [Trendorin](https://github.com/Trendorin). Licensed under [GPL-3.0-or-later](LICENSE).
