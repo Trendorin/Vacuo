@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Vacuo</title>
+  <desc id="desc">Native cache control for Linux, built with C++20 and Qt 6 Widgets.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1c1f22"/>
+      <stop offset="0.55" stop-color="#101214"/>
+      <stop offset="1" stop-color="#08090a"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f4f4f4" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#f4f4f4" stop-opacity="0.65"/>
+      <stop offset="1" stop-color="#f4f4f4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" fill="url(#bg)"/>
+  <g opacity="0.17" stroke="#e8eaec" fill="none">
+    <path d="M0 64h1200M0 296h1200"/>
+    <path d="M62 0v360M1138 0v360"/>
+    <path d="M770 0 602 360M920 0 752 360M1070 0 902 360"/>
+  </g>
+  <rect x="72" y="68" width="112" height="112" fill="#f2f2f2"/>
+  <rect x="82" y="78" width="92" height="92" fill="#111315"/>
+  <path fill="#f2f2f2" d="M101 94h12l15 42 15-42h12l-21 58h-12z"/>
+  <path fill="#a8adb1" d="M96 152h64v5H96z"/>
+  <text x="72" y="249" fill="#f5f5f5" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif" font-size="76" font-weight="650" letter-spacing="2">VACUO</text>
+  <text x="74" y="291" fill="#aeb3b7" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif" font-size="22" letter-spacing="3">NATIVE CACHE CONTROL FOR LINUX</text>
+  <g transform="translate(760 82)" font-family="Inter,Segoe UI,DejaVu Sans,sans-serif">
+    <text x="0" y="0" fill="#8d9398" font-size="14" letter-spacing="2">SYSTEM PROFILE</text>
+    <path d="M0 20h340" stroke="url(#line)"/>
+    <text x="0" y="66" fill="#f0f0f0" font-size="18">C++20 backend</text>
+    <text x="340" y="66" fill="#aeb3b7" font-size="16" text-anchor="end">NO ELECTRON</text>
+    <text x="0" y="113" fill="#f0f0f0" font-size="18">Qt 6 Widgets</text>
+    <text x="340" y="113" fill="#aeb3b7" font-size="16" text-anchor="end">SYSTEM THEME</text>
+    <text x="0" y="160" fill="#f0f0f0" font-size="18">Explicit cleanup plan</text>
+    <text x="340" y="160" fill="#aeb3b7" font-size="16" text-anchor="end">NO SURPRISES</text>
+    <text x="0" y="207" fill="#f0f0f0" font-size="18">Restricted helper</text>
+    <text x="340" y="207" fill="#aeb3b7" font-size="16" text-anchor="end">POLICYKIT</text>
+  </g>
+  <rect x="0" y="352" width="1200" height="8" fill="#d7dade"/>
+</svg>

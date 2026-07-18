@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private security report
+    url: https://github.com/Trendorin/Vacuo/security/advisories/new
+    about: Report a vulnerability without disclosing it publicly.
+  - name: Usage question
+    url: https://github.com/Trendorin/Vacuo/discussions
+    about: Ask how Vacuo works or get help with a supported workflow.

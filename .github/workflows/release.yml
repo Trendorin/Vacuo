@@ -1,0 +1,102 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "include/vacuo/version.hpp"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  attestations: write
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'Trendorin/Vacuo'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          version="$(sed -n 's/.*kVersion = "\([0-9][0-9.]*\)".*/\1/p' include/vacuo/version.hpp)"
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+
+      - name: Stop when this release already exists
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install packaging tools
+        if: steps.existing.outputs.exists == 'false'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            cmake g++ libgl1-mesa-dev ninja-build qt6-base-dev qt6-base-dev-tools rpm
+
+      - name: Build and test release
+        if: steps.existing.outputs.exists == 'false'
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DVACUO_WARNINGS_AS_ERRORS=ON
+          cmake --build build --parallel
+          ctest --test-dir build --output-on-failure
+
+      - name: Build packages and source archive
+        if: steps.existing.outputs.exists == 'false'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p dist
+          (cd build && cpack -G DEB && cpack -G RPM && cpack -G TGZ && cpack --config CPackSourceConfig.cmake)
+          find build -maxdepth 1 -type f \( -name '*.deb' -o -name '*.rpm' -o -name '*.tar.gz' \) -exec mv {} dist/ \;
+          source_archive="$(find dist -maxdepth 1 -name 'vacuo-*-source.tar.gz' -print -quit)"
+          source_hash="$(sha256sum "$source_archive" | cut -d' ' -f1)"
+          sed -e "s/@VERSION@/$VERSION/g" -e "s/@SOURCE_SHA256@/$source_hash/g" \
+            packaging/arch/PKGBUILD.in > dist/PKGBUILD
+          packaging/scripts/generate-sbom.sh "$VERSION" > "dist/vacuo-$VERSION.spdx"
+          (cd dist && sha256sum -- * > SHA256SUMS)
+
+      - name: Attest release packages
+        if: steps.existing.outputs.exists == 'false'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/*
+
+      - name: Create tag and GitHub release
+        if: steps.existing.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag --annotate "$TAG" --message "Vacuo $VERSION"
+          git push origin "$TAG"
+          gh release create "$TAG" dist/* \
+            --title "Vacuo $VERSION" \
+            --notes-file RELEASE_NOTES.md \
+            --verify-tag

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Vacuo</vendor>
+  <vendor_url>https://github.com/Trendorin/Vacuo</vendor_url>
+  <action id="io.github.trendorin.Vacuo.system-clean">
+    <description>Clean selected system cache with Vacuo</description>
+    <description xml:lang="ru">Очистить выбранный системный кэш через Vacuo</description>
+    <message>Authentication is required to clean selected system cache</message>
+    <message xml:lang="ru">Для очистки выбранного системного кэша требуется аутентификация</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">@CMAKE_INSTALL_FULL_LIBEXECDIR@/vacuo-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">false</annotate>
+  </action>
+</policyconfig>

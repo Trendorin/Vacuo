@@ -1,0 +1,71 @@
+name: Bug report
+description: Report reproducible incorrect behavior or a compatibility problem.
+title: "bug: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Do not report vulnerabilities here. Use private vulnerability reporting instead.
+  - type: input
+    id: version
+    attributes:
+      label: Vacuo version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Linux environment
+      description: Distribution/version, desktop, Wayland/X11 and filesystem. Do not include a username or home path.
+      placeholder: Fedora 44, KDE Plasma, Wayland, Btrfs
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Cleanup category
+      options:
+        - Scan / system detection
+        - Application cache
+        - Thumbnails
+        - Browser cache
+        - Developer cache
+        - Flatpak cache
+        - Steam cache
+        - Trash
+        - Package cache
+        - Journal / crash dumps / Snap
+        - CLI / JSON
+        - Packaging / installation
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Minimal numbered steps and the exact selected categories.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Redact usernames, home paths and unrelated personal data.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: This report does not disclose a security vulnerability.
+          required: true

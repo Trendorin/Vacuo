@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ubuntu:
+    name: Ubuntu · Qt 6 · GCC
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install build and validation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends \
+            appstream cmake desktop-file-utils g++ libgl1-mesa-dev libxml2-utils \
+            ninja-build qt6-base-dev qt6-base-dev-tools shellcheck
+
+      - name: Validate integration metadata
+        run: |
+          desktop-file-validate data/io.github.trendorin.Vacuo.desktop
+          appstreamcli validate --no-net data/io.github.trendorin.Vacuo.metainfo.xml
+          xmllint --noout data/polkit/io.github.trendorin.Vacuo.policy.in
+          shellcheck tests/run-core-tests.sh packaging/scripts/*.sh
+
+      - name: Configure
+        run: >-
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_INSTALL_PREFIX=/usr
+          -DVACUO_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Verify staged installation
+        run: DESTDIR="$PWD/stage" cmake --install build
+
+  sanitizers:
+    name: Core · Clang · ASan/UBSan
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Configure core
+        env:
+          CC: clang
+          CXX: clang++
+        run: >-
+          cmake -S . -B build-sanitized
+          -DCMAKE_BUILD_TYPE=Debug
+          -DVACUO_BUILD_GUI=OFF
+          -DVACUO_ENABLE_SANITIZERS=ON
+          -DVACUO_WARNINGS_AS_ERRORS=ON
+      - name: Build and test
+        run: |
+          cmake --build build-sanitized --parallel
+          ctest --test-dir build-sanitized --output-on-failure
+
+  fedora:
+    name: Fedora 44 · Qt 6
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    steps:
+      - name: Install tools
+        run: dnf install --assumeyes cmake gcc-c++ git ninja-build qt6-qtbase-devel
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build and test
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON
+          cmake --build build --parallel
+          ctest --test-dir build --output-on-failure
+
+  arch:
+    name: Arch Linux · Qt 6
+    runs-on: ubuntu-24.04
+    container: archlinux:base-devel
+    steps:
+      - name: Install tools
+        run: pacman -Syu --noconfirm --needed cmake git ninja qt6-base
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Build and test
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON
+          cmake --build build --parallel
+          ctest --test-dir build --output-on-failure

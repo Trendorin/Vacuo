@@ -1,0 +1,29 @@
+pkgname=vacuo
+pkgver=@VERSION@
+pkgrel=1
+pkgdesc='Native, safety-first Linux cache cleaner'
+arch=('x86_64')
+url='https://github.com/Trendorin/Vacuo'
+license=('GPL-3.0-or-later')
+depends=('gcc-libs' 'glibc' 'polkit' 'qt6-base')
+makedepends=('cmake' 'ninja')
+optdepends=('pacman-contrib: safe package-cache cleanup through paccache')
+source=("$pkgname-$pkgver.tar.gz::$url/releases/download/v$pkgver/$pkgname-$pkgver-source.tar.gz")
+sha256sums=('@SOURCE_SHA256@')
+
+build() {
+  cmake -S "$pkgname-$pkgver-source" -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib/vacuo \
+    -DVACUO_WARNINGS_AS_ERRORS=ON
+  cmake --build build
+}
+
+check() {
+  ctest --test-dir build --output-on-failure
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=Vacuo
+Name[ru]=Vacuo
+GenericName=Cache Cleaner
+GenericName[ru]=Очистка кэша
+Comment=Review and safely clean rebuildable Linux cache data
+Comment[ru]=Проверка и безопасная очистка восстанавливаемого кэша Linux
+Exec=vacuo
+Icon=io.github.trendorin.Vacuo
+Terminal=false
+Categories=System;Utility;Qt;
+Keywords=cache;cleaner;storage;disk;linux;
+Keywords[ru]=кэш;очистка;диск;место;linux;
+StartupNotify=true
+StartupWMClass=Vacuo
+X-GNOME-UsesNotifications=false

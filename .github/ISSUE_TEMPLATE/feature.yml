@@ -1,0 +1,42 @@
+name: Feature proposal
+description: Propose a bounded cleanup rule or product improvement.
+title: "proposal: "
+labels: [enhancement, needs-design]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What concrete problem should Vacuo solve?
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Proposed boundary
+      description: Exact paths or fixed action, what is rebuildable, and what must be preserved.
+    validations:
+      required: true
+  - type: textarea
+    id: systems
+    attributes:
+      label: Verified systems
+      description: Distribution/application versions and authoritative documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: risk
+    attributes:
+      label: Failure and recovery
+      description: Worst outcome, redownload/rebuild cost, concurrency behavior and recovery.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Scope checks
+      options:
+        - label: This does not remove packages, settings, credentials, projects, downloads or save data.
+          required: true
+        - label: The boundary can be expressed without arbitrary root paths or shell commands.
+          required: true
