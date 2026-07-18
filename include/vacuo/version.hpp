@@ -4,6 +4,6 @@
 
 namespace vacuo {
 
-inline constexpr std::string_view kVersion = "0.1.3";
+inline constexpr std::string_view kVersion = "0.1.4";
 
 } // namespace vacuo

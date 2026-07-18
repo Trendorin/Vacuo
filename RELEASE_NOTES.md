@@ -1,30 +1,29 @@
-# Vacuo 0.1.3
+# Vacuo 0.1.4
 
-Vacuo 0.1.3 is the clean, verified build of the new application identity and multilingual documentation. Installation, source builds and removal are documented in English, Russian, Ukrainian and German. Cleanup behavior and the PolicyKit boundary are unchanged from 0.1.1.
+Vacuo 0.1.4 aligns the repository presentation with MetaDrop. The README now uses only the centered application icon, while the existing native package and security boundaries remain unchanged.
 
 ## Included
 
 | Asset | Purpose |
 |---|---|
-| `vacuo_0.1.3_amd64.deb` | Debian / Ubuntu package |
-| `vacuo-0.1.3-1.x86_64.rpm` | Fedora / RHEL package |
+| `vacuo_0.1.4_amd64.deb` | Debian / Ubuntu package |
+| `vacuo-0.1.4-1.x86_64.rpm` | Fedora / RHEL package |
 | `PKGBUILD` | Arch-family package recipe |
-| `vacuo-0.1.3-x86_64.tar.gz` | Installable Linux tree |
-| `vacuo-0.1.3-source.tar.gz` | Release source |
-| `vacuo-0.1.3.spdx` | SPDX 2.3 software bill of materials |
+| `vacuo-0.1.4-x86_64.tar.gz` | Installable Linux tree |
+| `vacuo-0.1.4-source.tar.gz` | Release source |
+| `vacuo-0.1.4.spdx` | SPDX 2.3 software bill of materials |
 | `SHA256SUMS` | Integrity manifest for every asset |
 
 ## Changes
 
-- New high-contrast application icon and compact repository header.
-- English default README plus complete RU, UK and DE documentation.
-- Exact package, source-build and uninstall commands.
-- Clearer tables for cleanup scope, preserved data and distribution adapters.
+- Removed the wide README banner; the application icon is centered without a surrounding hero background.
+- Kept the same concise EN, RU, UK and DE documentation structure as MetaDrop.
+- Standardized installed project documents and release presentation.
 
 ## Safety
 
 - Run the GUI as a normal user; system actions request PolicyKit authorization separately.
-- Review selected categories before cleaning. Selected cache and Trash contents are deleted permanently.
+- Selected cache and Trash contents are deleted permanently.
 - Browser profiles, cookies, history, passwords, settings, projects, games and saves remain outside the cleanup catalog.
 - Arch package-cache cleanup requires `pacman-contrib`; Vacuo does not use `pacman -Scc`.
 

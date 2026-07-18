@@ -1,6 +1,9 @@
 <p align="center">
-  <img src="docs/assets/hero.svg" width="100%" alt="Vacuo — контролируемая очистка кэша Linux">
+  <img src="data/icons/hicolor/512x512/apps/io.github.trendorin.Vacuo.png" width="144" alt="Иконка приложения Vacuo">
 </p>
+
+<h1 align="center">Vacuo</h1>
+<p align="center">Контролируемая очистка кэша Linux.</p>
 
 <p align="center">
   <a href="README.md"><img alt="English" src="https://img.shields.io/badge/EN-English-d7dade?style=flat-square&labelColor=15181b"></a>
