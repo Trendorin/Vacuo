@@ -13,9 +13,20 @@ cmake --build "$build" --parallel
 ctest --test-dir "$build" --output-on-failure
 
 mkdir -p "$dist"
-(cd "$build" && cpack -G DEB && cpack -G RPM && cpack -G TGZ && cpack --config CPackSourceConfig.cmake)
-find "$build" -maxdepth 1 -type f \( -name '*.deb' -o -name '*.rpm' -o -name '*.tar.gz' \) \
+(cd "$build" && cpack -G DEB && cpack -G TGZ)
+find "$build" -maxdepth 1 -type f \( -name '*.deb' -o -name '*.tar.gz' \) \
   -exec cp --target-directory="$dist" {} +
+
+version="$(sed -n 's/.*kVersion = "\([0-9][0-9.]*\)".*/\1/p' "$root/include/vacuo/version.hpp")"
+test -n "$version"
+git -C "$root" archive --format=tar.gz \
+  --prefix="vacuo-$version-source/" \
+  --output="$dist/vacuo-$version-source.tar.gz" HEAD
+source_hash="$(sha256sum "$dist/vacuo-$version-source.tar.gz" | cut -d' ' -f1)"
+sed -e "s/@VERSION@/$version/g" -e "s/@SOURCE_SHA256@/$source_hash/g" \
+  "$root/packaging/arch/PKGBUILD.in" > "$dist/PKGBUILD"
+"$root/packaging/scripts/generate-sbom.sh" "$version" > "$dist/vacuo-$version.spdx"
 (cd "$dist" && sha256sum -- * > SHA256SUMS)
 
-printf 'Release artifacts: %s\n' "$dist"
+printf 'Portable release artifacts: %s\n' "$dist"
+printf 'Fedora RPM and Arch packages are built only in their native CI jobs.\n'

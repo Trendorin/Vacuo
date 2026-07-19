@@ -9,6 +9,20 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 - Broader integration tests on distribution-native virtual machines.
 - Optional translation catalogs after the user-facing vocabulary stabilizes.
 
+## [0.1.5] - 2026-07-19
+
+### Added
+
+- Publish a native `vacuo-0.1.5-1-x86_64.pkg.tar.zst` built with `makepkg --cleanbuild` on current Arch Linux.
+- Install-test the Arch package through `pacman -U`, including the CLI, GUI and restricted PolicyKit helper.
+
+### Changed
+
+- Build the RPM inside Fedora 44 and install-test the DEB on Ubuntu 24.04.
+- Verify PolicyKit dependency, helper path, root ownership, `0755` mode and dynamic-library links in every native package.
+- Align the release pipeline and exact eight-asset set with MetaDrop.
+- Document binary packages only for the distributions on which they are built and tested.
+
 ## [0.1.4] - 2026-07-19
 
 ### Changed
@@ -57,7 +71,8 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 - DEB, RPM, source/TGZ and generated Arch packaging.
 - CI on Ubuntu, Fedora and Arch, ASan/UBSan, CodeQL, checksums, SPDX SBOM and provenance.
 
-[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.5...HEAD
+[0.1.5]: https://github.com/Trendorin/Vacuo/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/Trendorin/Vacuo/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/Trendorin/Vacuo/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/Trendorin/Vacuo/compare/v0.1.1...v0.1.2

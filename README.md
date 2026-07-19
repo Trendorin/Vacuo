@@ -60,11 +60,11 @@ Download the matching asset from the [latest release](https://github.com/Trendor
 
 | System | Asset | Command |
 |---|---|---|
-| Fedora / RHEL | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
-| Debian / Ubuntu | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
-| Arch family | `PKGBUILD` | `makepkg -si` |
+| Fedora 44 | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
+| Ubuntu 24.04 | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
+| Arch Linux | `vacuo-*-x86_64.pkg.tar.zst` | `sudo pacman -U ./vacuo-*-x86_64.pkg.tar.zst` |
 
-On Arch, install `pacman-contrib` to enable safe package-cache cleanup. Vacuo deliberately has no `pacman -Scc` fallback.
+Each binary package is built and install-tested in its native target. `PKGBUILD` is included for a source rebuild with `makepkg -si`. On Arch, `pacman-contrib` enables safe package-cache cleanup; Vacuo has no `pacman -Scc` fallback.
 
 Verify downloaded files with the release manifest:
 
@@ -95,9 +95,9 @@ The installed helper must remain a regular root-owned `0755` executable. Never a
 
 | Installation | Command |
 |---|---|
-| Fedora / RHEL | `sudo dnf remove vacuo` |
-| Debian / Ubuntu | `sudo apt remove vacuo` |
-| Arch family | `sudo pacman -Rns vacuo` |
+| Fedora 44 | `sudo dnf remove vacuo` |
+| Ubuntu 24.04 | `sudo apt remove vacuo` |
+| Arch Linux | `sudo pacman -Rns vacuo` |
 | Source build | `sudo xargs -r -d '\n' rm -- < build/install_manifest.txt` |
 
 Optional: remove saved window geometry with `rm -f "$HOME/.config/Trendorin/Vacuo.conf"`.

@@ -25,6 +25,11 @@
   <url type="vcs-browser">https://github.com/Trendorin/Vacuo</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.5" date="2026-07-19">
+      <description>
+        <p>Add a clean-built Arch Linux package and native installation checks for DEB, RPM and Arch formats.</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2026-07-19">
       <description>
         <p>Centered application identity and documentation layout aligned with MetaDrop.</p>

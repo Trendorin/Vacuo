@@ -60,11 +60,11 @@ Vacuo — нативна Linux-утиліта, що вимірює відомі 
 
 | Система | Файл | Команда |
 |---|---|---|
-| Fedora / RHEL | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
-| Debian / Ubuntu | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
-| Arch-based | `PKGBUILD` | `makepkg -si` |
+| Fedora 44 | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
+| Ubuntu 24.04 | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
+| Arch Linux | `vacuo-*-x86_64.pkg.tar.zst` | `sudo pacman -U ./vacuo-*-x86_64.pkg.tar.zst` |
 
-На Arch встановіть `pacman-contrib`, щоб увімкнути безпечне очищення кешу пакетів. Fallback на `pacman -Scc` навмисно відсутній.
+Кожен бінарний пакет збирається та перевіряється встановленням у цільовій системі. Для складання з вихідного коду в релізі залишається `PKGBUILD`: `makepkg -si`. На Arch пакет `pacman-contrib` вмикає безпечне очищення кешу пакетів; fallback на `pacman -Scc` відсутній.
 
 Перевірка завантажених файлів:
 
@@ -95,9 +95,9 @@ Helper має залишатися звичайним root-owned файлом і
 
 | Спосіб встановлення | Команда |
 |---|---|
-| Fedora / RHEL | `sudo dnf remove vacuo` |
-| Debian / Ubuntu | `sudo apt remove vacuo` |
-| Arch-based | `sudo pacman -Rns vacuo` |
+| Fedora 44 | `sudo dnf remove vacuo` |
+| Ubuntu 24.04 | `sudo apt remove vacuo` |
+| Arch Linux | `sudo pacman -Rns vacuo` |
 | Збірка з вихідного коду | `sudo xargs -r -d '\n' rm -- < build/install_manifest.txt` |
 
 За потреби видаліть збережену геометрію вікна: `rm -f "$HOME/.config/Trendorin/Vacuo.conf"`.

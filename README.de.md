@@ -60,11 +60,11 @@ Lade das passende Paket aus dem [aktuellen Release](https://github.com/Trendorin
 
 | System | Datei | Befehl |
 |---|---|---|
-| Fedora / RHEL | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
-| Debian / Ubuntu | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
-| Arch-basiert | `PKGBUILD` | `makepkg -si` |
+| Fedora 44 | `vacuo-*.rpm` | `sudo dnf install ./vacuo-*.rpm` |
+| Ubuntu 24.04 | `vacuo_*.deb` | `sudo apt install ./vacuo_*.deb` |
+| Arch Linux | `vacuo-*-x86_64.pkg.tar.zst` | `sudo pacman -U ./vacuo-*-x86_64.pkg.tar.zst` |
 
-Unter Arch wird `pacman-contrib` für die sichere Paket-Cache-Bereinigung benötigt. Einen Fallback auf `pacman -Scc` gibt es bewusst nicht.
+Jedes Binärpaket wird im jeweiligen Zielsystem gebaut und installiert geprüft. Für einen Quellcode-Build bleibt `PKGBUILD` mit `makepkg -si` enthalten. Unter Arch ermöglicht `pacman-contrib` die sichere Paket-Cache-Bereinigung; einen Fallback auf `pacman -Scc` gibt es nicht.
 
 Heruntergeladene Dateien prüfen:
 
@@ -95,9 +95,9 @@ Der installierte Helper muss eine normale, root-eigene Datei mit Modus `0755` bl
 
 | Installationsart | Befehl |
 |---|---|
-| Fedora / RHEL | `sudo dnf remove vacuo` |
-| Debian / Ubuntu | `sudo apt remove vacuo` |
-| Arch-basiert | `sudo pacman -Rns vacuo` |
+| Fedora 44 | `sudo dnf remove vacuo` |
+| Ubuntu 24.04 | `sudo apt remove vacuo` |
+| Arch Linux | `sudo pacman -Rns vacuo` |
 | Quellcode-Build | `sudo xargs -r -d '\n' rm -- < build/install_manifest.txt` |
 
 Optional gespeicherte Fenstergeometrie entfernen: `rm -f "$HOME/.config/Trendorin/Vacuo.conf"`.
