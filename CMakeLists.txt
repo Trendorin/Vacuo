@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(Vacuo
-    VERSION 0.1.5
+    VERSION 0.1.6
     DESCRIPTION "Native, safety-first Linux cache cleaner"
     HOMEPAGE_URL "https://github.com/Trendorin/Vacuo"
     LANGUAGES CXX
@@ -84,15 +84,21 @@ if(VACUO_BUILD_HELPER)
 endif()
 
 if(VACUO_BUILD_GUI)
-    find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets Concurrent)
+    find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets Concurrent LinguistTools)
     qt_standard_project_setup()
 
     qt_add_executable(vacuo
+        src/gui/language_manager.cpp
+        src/gui/language_manager.hpp
         src/gui/main.cpp
         src/gui/main_window.cpp
         src/gui/main_window.hpp
         src/gui/scan_model.cpp
         src/gui/scan_model.hpp
+        src/gui/settings_dialog.cpp
+        src/gui/settings_dialog.hpp
+        src/gui/translation_utils.cpp
+        src/gui/translation_utils.hpp
     )
     target_link_libraries(vacuo PRIVATE vacuo-core Qt6::Widgets Qt6::Concurrent)
     set_target_properties(vacuo PROPERTIES
@@ -100,6 +106,14 @@ if(VACUO_BUILD_GUI)
         POSITION_INDEPENDENT_CODE ON
     )
     vacuo_harden(vacuo)
+
+    qt_add_translations(vacuo
+        TS_FILES
+            translations/vacuo_ru.ts
+            translations/vacuo_uk.ts
+            translations/vacuo_de.ts
+        RESOURCE_PREFIX "/i18n"
+    )
 endif()
 
 if(BUILD_TESTING)

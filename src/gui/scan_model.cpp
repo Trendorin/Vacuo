@@ -1,5 +1,7 @@
 #include "scan_model.hpp"
 
+#include "translation_utils.hpp"
+
 #include "vacuo/core/types.hpp"
 
 #include <QBrush>
@@ -37,12 +39,12 @@ QVariant ScanModel::data(const QModelIndex& index, const int role) const {
         return QBrush(QColor(Qt::gray));
     }
     if (role == Qt::ToolTipRole) {
-        QString tooltip = QString::fromStdString(result.rule.description);
+        QString tooltip = translatedVacuoText(result.rule.description);
         if (!result.rule.warning.empty()) {
-            tooltip += QStringLiteral("\n\n") + QString::fromStdString(result.rule.warning);
+            tooltip += QStringLiteral("\n\n") + translatedVacuoText(result.rule.warning);
         }
         if (!result.note.empty()) {
-            tooltip += QStringLiteral("\n\n") + QString::fromStdString(result.note);
+            tooltip += QStringLiteral("\n\n") + translatedVacuoText(result.note);
         }
         return tooltip;
     }
@@ -54,7 +56,7 @@ QVariant ScanModel::data(const QModelIndex& index, const int role) const {
     case Selected:
         return {};
     case Category:
-        return QString::fromStdString(result.rule.title);
+        return translatedVacuoText(result.rule.title);
     case Scope:
         return result.rule.scope == vacuo::RuleScope::User ? tr("User") : tr("System");
     case Risk:
@@ -151,6 +153,14 @@ void ScanModel::setReport(vacuo::ScanReport report) {
         selected_[index] = result.available && result.stats.items > 0 && result.rule.selectedByDefault;
     }
     endResetModel();
+}
+
+void ScanModel::retranslate() {
+    emit headerDataChanged(Qt::Horizontal, 0, ColumnCount - 1);
+    if (!report_.results.empty()) {
+        emit dataChanged(index(0, 0), index(rowCount() - 1, ColumnCount - 1),
+                         {Qt::DisplayRole, Qt::ToolTipRole});
+    }
 }
 
 const vacuo::ScanReport& ScanModel::report() const {

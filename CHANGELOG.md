@@ -7,7 +7,18 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 ### Planned
 
 - Broader integration tests on distribution-native virtual machines.
-- Optional translation catalogs after the user-facing vocabulary stabilizes.
+
+## [0.1.6] - 2026-07-19
+
+### Added
+
+- Add a native Settings dialog with English, Russian, Ukrainian and German interface languages and a system-language default.
+- Translate cleanup categories, descriptions, warnings, risk levels, dialogs and status messages.
+
+### Changed
+
+- Apply language changes immediately without restarting and persist the selection through `QSettings`.
+- Add Qt LinguistTools to native package build dependencies and validate translation catalogs in CI.
 
 ## [0.1.5] - 2026-07-19
 
@@ -71,7 +82,8 @@ All notable changes to Vacuo are documented here. The format follows [Keep a Cha
 - DEB, RPM, source/TGZ and generated Arch packaging.
 - CI on Ubuntu, Fedora and Arch, ASan/UBSan, CodeQL, checksums, SPDX SBOM and provenance.
 
-[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/Trendorin/Vacuo/compare/v0.1.6...HEAD
+[0.1.6]: https://github.com/Trendorin/Vacuo/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/Trendorin/Vacuo/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/Trendorin/Vacuo/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/Trendorin/Vacuo/compare/v0.1.2...v0.1.3

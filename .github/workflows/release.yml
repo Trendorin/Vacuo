@@ -74,7 +74,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends \
             build-essential cmake dpkg-dev libgl1-mesa-dev ninja-build \
-            qt6-base-dev qt6-base-dev-tools
+            qt6-base-dev qt6-base-dev-tools qt6-tools-dev
 
       - name: Configure, build and test
         run: |
@@ -162,7 +162,7 @@ jobs:
       - name: Install Fedora build dependencies
         run: |
           dnf install --setopt=install_weak_deps=False -y \
-            cmake gcc-c++ git-core ninja-build qt6-qtbase-devel rpm-build
+            cmake gcc-c++ git-core ninja-build qt6-qtbase-devel qt6-qttools-devel rpm-build
 
       - name: Check out source
         uses: actions/checkout@v7
@@ -220,7 +220,7 @@ jobs:
     steps:
       - name: Install Arch build dependencies
         run: |
-          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base qt6-tools
           sed -i '/^NoExtract[[:space:]]*=.*usr\/share\/doc/d' /etc/pacman.conf
 
       - name: Download source and PKGBUILD

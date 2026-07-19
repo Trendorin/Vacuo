@@ -1,5 +1,9 @@
 #include "main_window.hpp"
 
+#include "language_manager.hpp"
+#include "settings_dialog.hpp"
+#include "translation_utils.hpp"
+
 #include "vacuo/core/cleaner.hpp"
 #include "vacuo/core/rule_catalog.hpp"
 #include "vacuo/core/scanner.hpp"
@@ -12,6 +16,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDialogButtonBox>
+#include <QEvent>
 #include <QFont>
 #include <QFrame>
 #include <QGroupBox>
@@ -38,10 +43,12 @@
 #include <algorithm>
 #include <sstream>
 
-MainWindow::MainWindow(QWidget* parent)
+MainWindow::MainWindow(LanguageManager* languages, QWidget* parent)
     : QMainWindow(parent),
+      languages_(languages),
       system_(vacuo::SystemDetector::detect()),
       rules_(vacuo::RuleCatalog::build(system_)) {
+    Q_ASSERT(languages_ != nullptr);
     setupUi();
     setupMenus();
     setSystemSummary();
@@ -66,6 +73,13 @@ MainWindow::~MainWindow() {
     cleanWatcher_.waitForFinished();
 }
 
+void MainWindow::changeEvent(QEvent* event) {
+    QMainWindow::changeEvent(event);
+    if (event->type() == QEvent::LanguageChange) {
+        retranslateUi();
+    }
+}
+
 void MainWindow::setupUi() {
     setWindowTitle(tr("Vacuo — Linux cache cleaner"));
     setMinimumSize(820, 560);
@@ -86,10 +100,10 @@ void MainWindow::setupUi() {
     titleFont.setWeight(QFont::DemiBold);
     title->setFont(titleFont);
     title->setAccessibleName(tr("Vacuo application title"));
-    auto* subtitle = new QLabel(tr("Native Linux cache control"), central);
-    subtitle->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    subtitleLabel_ = new QLabel(central);
+    subtitleLabel_->setTextInteractionFlags(Qt::TextSelectableByMouse);
     headingColumn->addWidget(title);
-    headingColumn->addWidget(subtitle);
+    headingColumn->addWidget(subtitleLabel_);
     headingRow->addLayout(headingColumn);
     headingRow->addStretch();
     systemLabel_ = new QLabel(central);
@@ -128,15 +142,15 @@ void MainWindow::setupUi() {
     table_->setAccessibleName(tr("Cleanup categories"));
     layout->addWidget(table_, 1);
 
-    auto* detailsGroup = new QGroupBox(tr("Details"), central);
-    auto* detailsLayout = new QVBoxLayout(detailsGroup);
-    details_ = new QTextBrowser(detailsGroup);
+    detailsGroup_ = new QGroupBox(central);
+    auto* detailsLayout = new QVBoxLayout(detailsGroup_);
+    details_ = new QTextBrowser(detailsGroup_);
     details_->setOpenExternalLinks(false);
     details_->setFrameShape(QFrame::NoFrame);
     details_->setMaximumHeight(122);
     details_->setAccessibleName(tr("Selected category details"));
     detailsLayout->addWidget(details_);
-    layout->addWidget(detailsGroup);
+    layout->addWidget(detailsGroup_);
 
     auto* footer = new QHBoxLayout;
     selectionLabel_ = new QLabel(tr("Nothing selected"), central);
@@ -164,23 +178,30 @@ void MainWindow::setupUi() {
     layout->addLayout(footer);
 
     setCentralWidget(central);
+    retranslateUi();
 }
 
 void MainWindow::setupMenus() {
-    auto* fileMenu = menuBar()->addMenu(tr("&File"));
-    auto* rescan = fileMenu->addAction(QIcon::fromTheme(QStringLiteral("view-refresh")), tr("&Scan again"));
-    rescan->setShortcut(QKeySequence::Refresh);
-    connect(rescan, &QAction::triggered, this, &MainWindow::startScan);
-    fileMenu->addSeparator();
-    auto* quit = fileMenu->addAction(tr("&Quit"));
-    quit->setShortcut(QKeySequence::Quit);
-    connect(quit, &QAction::triggered, this, &QWidget::close);
+    fileMenu_ = menuBar()->addMenu(QString());
+    rescanAction_ = fileMenu_->addAction(QIcon::fromTheme(QStringLiteral("view-refresh")), QString());
+    rescanAction_->setShortcut(QKeySequence::Refresh);
+    connect(rescanAction_, &QAction::triggered, this, &MainWindow::startScan);
+    fileMenu_->addSeparator();
+    quitAction_ = fileMenu_->addAction(QString());
+    quitAction_->setShortcut(QKeySequence::Quit);
+    connect(quitAction_, &QAction::triggered, this, &QWidget::close);
 
-    auto* helpMenu = menuBar()->addMenu(tr("&Help"));
-    auto* security = helpMenu->addAction(tr("Security model"));
-    connect(security, &QAction::triggered, this, &MainWindow::showSecurityInformation);
-    auto* about = helpMenu->addAction(tr("About Vacuo"));
-    connect(about, &QAction::triggered, this, &MainWindow::showAbout);
+    editMenu_ = menuBar()->addMenu(QString());
+    settingsAction_ = editMenu_->addAction(QString());
+    settingsAction_->setShortcut(QKeySequence::Preferences);
+    connect(settingsAction_, &QAction::triggered, this, &MainWindow::showSettings);
+
+    helpMenu_ = menuBar()->addMenu(QString());
+    securityAction_ = helpMenu_->addAction(QString());
+    connect(securityAction_, &QAction::triggered, this, &MainWindow::showSecurityInformation);
+    aboutAction_ = helpMenu_->addAction(QString());
+    connect(aboutAction_, &QAction::triggered, this, &MainWindow::showAbout);
+    retranslateUi();
 }
 
 void MainWindow::setSystemSummary() {
@@ -226,11 +247,7 @@ void MainWindow::scanFinished() {
         return;
     }
     model_->setReport(scanWatcher_.result());
-    const auto& report = model_->report();
-    summaryLabel_->setText(
-        tr("Found %1 across %2 removable entries. Review each category before cleaning.")
-            .arg(QString::fromStdString(vacuo::formatBytes(report.totalBytes)))
-            .arg(report.totalItems));
+    updateScanSummary();
     setBusy(false);
     if (model_->rowCount() > 0) {
         table_->selectRow(0);
@@ -266,10 +283,10 @@ void MainWindow::updateDetails() {
     const auto warning = result->rule.warning.empty()
         ? QString{}
         : QStringLiteral("<br><b>%1</b> %2")
-              .arg(tr("Note:"), QString::fromStdString(result->rule.warning).toHtmlEscaped());
+              .arg(tr("Note:"), translatedVacuoText(result->rule.warning).toHtmlEscaped());
     details_->setHtml(QStringLiteral("<b>%1</b><br>%2%3<br><span>%4</span>")
-                          .arg(QString::fromStdString(result->rule.title).toHtmlEscaped(),
-                               QString::fromStdString(result->rule.description).toHtmlEscaped(),
+                          .arg(translatedVacuoText(result->rule.title).toHtmlEscaped(),
+                               translatedVacuoText(result->rule.description).toHtmlEscaped(),
                                warning,
                                paths));
 }
@@ -294,17 +311,23 @@ void MainWindow::startClean() {
                            .arg(QString::fromStdString(vacuo::formatBytes(model_->selectedBytes())))
                            .arg(static_cast<qulonglong>(selected.size()));
     if (includesSystem) {
-        question += tr("\n\nSystem categories require a PolicyKit authentication prompt.");
+        question += QStringLiteral("\n\n") +
+                    tr("System categories require a PolicyKit authentication prompt.");
     }
     if (includesElevated) {
-        question += tr("\n\nAt least one selected category is not reversible.");
+        question += QStringLiteral("\n\n") +
+                    tr("At least one selected category is not reversible.");
     }
-    const auto answer = QMessageBox::warning(this,
-                                              tr("Confirm cleanup"),
-                                              question,
-                                              QMessageBox::Yes | QMessageBox::Cancel,
-                                              QMessageBox::Cancel);
-    if (answer != QMessageBox::Yes) {
+    QMessageBox confirmation(QMessageBox::Warning,
+                             tr("Confirm cleanup"),
+                             question,
+                             QMessageBox::NoButton,
+                             this);
+    auto* confirmButton = confirmation.addButton(tr("Clean"), QMessageBox::AcceptRole);
+    auto* cancelButton = confirmation.addButton(tr("Cancel"), QMessageBox::RejectRole);
+    confirmation.setDefaultButton(cancelButton);
+    confirmation.exec();
+    if (confirmation.clickedButton() != confirmButton) {
         return;
     }
 
@@ -324,7 +347,7 @@ void MainWindow::cleanFinished() {
         if (!action.success) {
             details += QStringLiteral("%1: %2\n")
                            .arg(QString::fromStdString(action.ruleId),
-                                QString::fromStdString(action.message));
+                                translatedVacuoText(action.message));
         }
     }
     if (report.allSucceeded()) {
@@ -366,6 +389,79 @@ void MainWindow::showAbout() {
            "<p>A native C++20 and Qt 6 Widgets cache cleaner for Linux.</p>"
            "<p>Copyright © 2026 Trendorin. Licensed under GPL-3.0-or-later.</p>")
             .arg(version));
+}
+
+void MainWindow::showSettings() {
+    QSettings settings;
+    settings.beginGroup(QStringLiteral("General"));
+    const QString currentLanguage =
+        settings.value(QStringLiteral("language"), QStringLiteral("system")).toString();
+    settings.endGroup();
+
+    SettingsDialog dialog(currentLanguage, this);
+    if (dialog.exec() != QDialog::Accepted) {
+        return;
+    }
+
+    const QString language = LanguageManager::normalizedLanguage(dialog.language());
+    settings.beginGroup(QStringLiteral("General"));
+    settings.setValue(QStringLiteral("language"), language);
+    settings.endGroup();
+    settings.sync();
+    (void)languages_->applyLanguage(language);
+}
+
+void MainWindow::updateScanSummary() {
+    if (model_ == nullptr || summaryLabel_ == nullptr) {
+        return;
+    }
+    const auto& report = model_->report();
+    if (report.results.empty()) {
+        summaryLabel_->setText(tr("Scanning the system…"));
+        return;
+    }
+    summaryLabel_->setText(
+        tr("Found %1 across %2 removable entries. Review each category before cleaning.")
+            .arg(QString::fromStdString(vacuo::formatBytes(report.totalBytes)))
+            .arg(report.totalItems));
+}
+
+void MainWindow::retranslateUi() {
+    setWindowTitle(tr("Vacuo — Linux cache cleaner"));
+    if (subtitleLabel_ != nullptr) {
+        subtitleLabel_->setText(tr("Native Linux cache control"));
+        summaryLabel_->setAccessibleName(tr("Scan summary"));
+        table_->setAccessibleName(tr("Cleanup categories"));
+        detailsGroup_->setTitle(tr("Details"));
+        details_->setAccessibleName(tr("Selected category details"));
+        scanButton_->setText(tr("Scan again"));
+        scanButton_->setAccessibleDescription(
+            tr("Scan supported cache locations without changing files"));
+        cleanButton_->setText(tr("Clean selected"));
+        cleanButton_->setAccessibleDescription(
+            tr("Review and permanently clean selected cache categories"));
+        setSystemSummary();
+        model_->retranslate();
+        updateScanSummary();
+        updateSelectionSummary();
+        updateDetails();
+    }
+    if (fileMenu_ != nullptr) {
+        fileMenu_->setTitle(tr("&File"));
+        editMenu_->setTitle(tr("&Edit"));
+        helpMenu_->setTitle(tr("&Help"));
+        rescanAction_->setText(tr("&Scan again"));
+        quitAction_->setText(tr("&Quit"));
+        settingsAction_->setText(tr("Settings…"));
+        securityAction_->setText(tr("Security model"));
+        aboutAction_->setText(tr("About Vacuo"));
+    }
+    if (cleanWatcher_.isRunning()) {
+        statusBar()->showMessage(tr("Cleaning selected categories…"));
+    } else if (scanWatcher_.isRunning()) {
+        statusBar()->showMessage(tr("Scanning supported cache locations…"));
+        summaryLabel_->setText(tr("Scanning is read-only. No files are changed."));
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
