@@ -1,3 +1,4 @@
+#include "language_manager.hpp"
 #include "main_window.hpp"
 
 #include "vacuo/core/cleaner.hpp"
@@ -6,6 +7,7 @@
 #include <QApplication>
 #include <QIcon>
 #include <QMessageBox>
+#include <QSettings>
 #include <QStyle>
 
 int main(int argc, char* argv[]) {
@@ -22,6 +24,14 @@ int main(int argc, char* argv[]) {
         QStringLiteral("io.github.trendorin.Vacuo"),
         application.style()->standardIcon(QStyle::SP_TrashIcon)));
 
+    QSettings settings;
+    settings.beginGroup(QStringLiteral("General"));
+    const QString requestedLanguage =
+        settings.value(QStringLiteral("language"), QStringLiteral("system")).toString();
+    settings.endGroup();
+    LanguageManager languages;
+    (void)languages.applyLanguage(requestedLanguage);
+
     if (vacuo::Cleaner::isRunningAsRoot()) {
         QMessageBox::critical(
             nullptr,
@@ -30,7 +40,7 @@ int main(int argc, char* argv[]) {
         return 77;
     }
 
-    MainWindow window;
+    MainWindow window(&languages);
     window.show();
     return application.exec();
 }

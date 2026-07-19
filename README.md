@@ -30,6 +30,8 @@
 
 Vacuo is a native Linux utility that measures known cache locations, shows exactly what can be removed, and cleans only selected categories. It uses a C++20 core and a Qt 6 Widgets interface that follows the active desktop theme. No Electron, telemetry, account, cloud service, or background daemon.
 
+The interface follows the system language or switches immediately between English, Russian, Ukrainian and German in Settings.
+
 ## What it does
 
 | Scope | Included | Default |
@@ -75,7 +77,7 @@ sha256sum --ignore-missing --check SHA256SUMS
 <a id="build-from-source"></a>
 ## Build from source
 
-Requirements: CMake 3.24+, a C++20 compiler, Ninja or Make, Qt 6.4+ (`Widgets`, `Concurrent`) and PolicyKit for system actions.
+Requirements: CMake 3.24+, a C++20 compiler, Ninja or Make, Qt 6.4+ (`Widgets`, `Concurrent`, `LinguistTools`) and PolicyKit for system actions.
 
 ```bash
 git clone https://github.com/Trendorin/Vacuo.git

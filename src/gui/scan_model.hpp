@@ -34,6 +34,7 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
 
     void setReport(vacuo::ScanReport report);
+    void retranslate();
     [[nodiscard]] const vacuo::ScanReport& report() const;
     [[nodiscard]] const vacuo::ScanResult* resultAt(int row) const;
     [[nodiscard]] std::vector<std::string> selectedRuleIds() const;

@@ -1,18 +1,18 @@
-# Vacuo 0.1.5
+# Vacuo 0.1.6
 
-Vacuo 0.1.5 adds a directly installable Arch Linux package and rebuilds each native package in its target distribution. Cleanup behavior and safety boundaries are unchanged.
+Vacuo 0.1.6 adds persistent in-application language settings for English, Russian, Ukrainian and German. Interface controls, cleanup categories, warnings and statuses update immediately without restarting; cleanup behavior and safety boundaries are unchanged.
 
 ## Included
 
 | Asset | Target |
 |---|---|
-| `vacuo_0.1.5_amd64.deb` | Ubuntu 24.04 |
-| `vacuo-0.1.5-1.x86_64.rpm` | Fedora 44 |
-| `vacuo-0.1.5-1-x86_64.pkg.tar.zst` | Arch Linux |
+| `vacuo_0.1.6_amd64.deb` | Ubuntu 24.04 |
+| `vacuo-0.1.6-1.x86_64.rpm` | Fedora 44 |
+| `vacuo-0.1.6-1-x86_64.pkg.tar.zst` | Arch Linux |
 | `PKGBUILD` | Arch source rebuild |
-| `vacuo-0.1.5-x86_64.tar.gz` | Installable Linux tree |
-| `vacuo-0.1.5-source.tar.gz` | Release source |
-| `vacuo-0.1.5.spdx` | SPDX 2.3 SBOM |
+| `vacuo-0.1.6-x86_64.tar.gz` | Installable Linux tree |
+| `vacuo-0.1.6-source.tar.gz` | Release source |
+| `vacuo-0.1.6.spdx` | SPDX 2.3 SBOM |
 | `SHA256SUMS` | Integrity manifest |
 
 ## Validation
@@ -25,7 +25,7 @@ Vacuo 0.1.5 adds a directly installable Arch Linux package and rebuilds each nat
 Install on Arch Linux:
 
 ```bash
-sudo pacman -U ./vacuo-0.1.5-1-x86_64.pkg.tar.zst
+sudo pacman -U ./vacuo-0.1.6-1-x86_64.pkg.tar.zst
 ```
 
 For package-cache cleanup install `pacman-contrib`; Vacuo never falls back to `pacman -Scc`. Verify downloads with `sha256sum --ignore-missing --check SHA256SUMS`.

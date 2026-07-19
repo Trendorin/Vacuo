@@ -26,13 +26,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends \
             appstream cmake desktop-file-utils g++ libgl1-mesa-dev libxml2-utils \
-            ninja-build qt6-base-dev qt6-base-dev-tools shellcheck
+            ninja-build qt6-base-dev qt6-base-dev-tools qt6-tools-dev shellcheck
 
       - name: Validate integration metadata
         run: |
           desktop-file-validate data/io.github.trendorin.Vacuo.desktop
           appstreamcli validate --no-net data/io.github.trendorin.Vacuo.metainfo.xml
           xmllint --noout data/polkit/io.github.trendorin.Vacuo.policy.in
+          xmllint --noout translations/vacuo_ru.ts translations/vacuo_uk.ts translations/vacuo_de.ts
           shellcheck tests/run-core-tests.sh packaging/scripts/*.sh
 
       - name: Configure
@@ -104,7 +105,7 @@ jobs:
       - name: Install tools
         run: >-
           dnf install --setopt=install_weak_deps=False --assumeyes
-          cmake gcc-c++ git-core ninja-build qt6-qtbase-devel rpm-build
+          cmake gcc-c++ git-core ninja-build qt6-qtbase-devel qt6-qttools-devel rpm-build
       - name: Check out source
         uses: actions/checkout@v7
       - name: Build and test
@@ -142,7 +143,7 @@ jobs:
     steps:
       - name: Install tools
         run: |
-          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base qt6-tools
           sed -i '/^NoExtract[[:space:]]*=.*usr\/share\/doc/d' /etc/pacman.conf
       - name: Check out source
         uses: actions/checkout@v7

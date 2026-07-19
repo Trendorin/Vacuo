@@ -30,6 +30,8 @@
 
 Vacuo ist ein natives Linux-Werkzeug, das bekannte Cache-Verzeichnisse misst, einen genauen Bereinigungsplan anzeigt und nur ausgewählte Kategorien löscht. Der Kern ist in C++20 geschrieben; die Qt-6-Widgets-Oberfläche übernimmt das aktive Systemdesign. Kein Electron, keine Telemetrie, kein Konto, kein Cloud-Dienst und kein Hintergrunddienst.
 
+Die Oberfläche folgt der Systemsprache oder wechselt in den Einstellungen sofort zwischen Englisch, Russisch, Ukrainisch und Deutsch.
+
 ## Funktionsumfang
 
 | Bereich | Enthalten | Standard |
