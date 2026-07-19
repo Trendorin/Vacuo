@@ -141,7 +141,9 @@ jobs:
     container: archlinux:base-devel
     steps:
       - name: Install tools
-        run: pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+        run: |
+          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+          sed -i '/^NoExtract[[:space:]]*=.*usr\/share\/doc/d' /etc/pacman.conf
       - name: Check out source
         uses: actions/checkout@v7
         with:
@@ -173,6 +175,7 @@ jobs:
         run: |
           package_file="/tmp/vacuo-package/vacuo-${VERSION}-1-x86_64.pkg.tar.zst"
           test -f "${package_file}"
+          test "$(find /tmp/vacuo-package -maxdepth 1 -type f -name '*.pkg.tar.zst' | wc -l)" -eq 1
           pacman -Qip "${package_file}"
           pacman -Qlp "${package_file}" | tee /tmp/vacuo-package-files.txt
           grep -q 'usr/bin/vacuo$' /tmp/vacuo-package-files.txt

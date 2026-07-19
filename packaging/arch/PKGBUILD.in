@@ -8,6 +8,7 @@ license=('GPL-3.0-or-later')
 depends=('gcc-libs' 'glibc' 'polkit' 'qt6-base')
 makedepends=('cmake' 'ninja')
 optdepends=('pacman-contrib: safe package-cache cleanup through paccache')
+options=('!debug')
 source=("$url/releases/download/v$pkgver/$pkgname-$pkgver-source.tar.gz")
 sha256sums=('@SOURCE_SHA256@')
 

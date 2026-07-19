@@ -219,7 +219,9 @@ jobs:
 
     steps:
       - name: Install Arch build dependencies
-        run: pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+        run: |
+          pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
+          sed -i '/^NoExtract[[:space:]]*=.*usr\/share\/doc/d' /etc/pacman.conf
 
       - name: Download source and PKGBUILD
         uses: actions/download-artifact@v8
