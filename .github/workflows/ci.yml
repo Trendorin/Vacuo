@@ -51,6 +51,29 @@ jobs:
       - name: Verify staged installation
         run: DESTDIR="$PWD/stage" cmake --install build
 
+      - name: Build and install Ubuntu package
+        run: |
+          mkdir -p package-output
+          cpack --config build/CPackConfig.cmake -G DEB -B package-output
+          cpack --config build/CPackConfig.cmake -G TGZ -B package-output
+          deb_file="$(find package-output -maxdepth 1 -type f -name '*.deb' -print -quit)"
+          tree_file="$(find package-output -maxdepth 1 -type f -name '*.tar.gz' -print -quit)"
+          test -n "${deb_file}"
+          test -n "${tree_file}"
+          dpkg-deb --info "${deb_file}"
+          dpkg-deb --contents "${deb_file}"
+          sudo apt-get install --no-install-recommends -y "${deb_file}"
+          dpkg-query --show --showformat='${Package} ${Version}\n' vacuo
+          dpkg --verify vacuo
+          vacuoctl --version
+          for binary in /usr/bin/vacuo /usr/bin/vacuoctl /usr/libexec/vacuo-helper; do
+            ldd "${binary}"
+            ! ldd "${binary}" | grep -q 'not found'
+          done
+          tar -tzf "${tree_file}" | tee /tmp/vacuo-tree.txt
+          grep -Eq '(^|/)bin/vacuo$' /tmp/vacuo-tree.txt
+          grep -Eq '(^|/)bin/vacuoctl$' /tmp/vacuo-tree.txt
+
   sanitizers:
     name: Core · Clang · ASan/UBSan
     runs-on: ubuntu-24.04
@@ -73,31 +96,92 @@ jobs:
           ctest --test-dir build-sanitized --output-on-failure
 
   fedora:
-    name: Fedora 44 · Qt 6
+    name: Fedora 44 RPM install test
     runs-on: ubuntu-24.04
     container: fedora:44
     steps:
       - name: Install tools
-        run: dnf install --assumeyes cmake gcc-c++ git ninja-build qt6-qtbase-devel
+        run: >-
+          dnf install --setopt=install_weak_deps=False --assumeyes
+          cmake gcc-c++ git-core ninja-build qt6-qtbase-devel rpm-build
       - name: Check out source
         uses: actions/checkout@v7
       - name: Build and test
         run: |
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DVACUO_WARNINGS_AS_ERRORS=ON
           cmake --build build --parallel
           ctest --test-dir build --output-on-failure
 
+      - name: Build and install Fedora RPM
+        run: |
+          mkdir -p package-output
+          cpack --config build/CPackConfig.cmake -G RPM -B package-output
+          rpm_file="$(find package-output -maxdepth 1 -type f -name '*.rpm' -print -quit)"
+          test -n "${rpm_file}"
+          rpm -qpl "${rpm_file}"
+          rpm -qpR "${rpm_file}" | sort | tee /tmp/vacuo-rpm-requires.txt
+          grep -Eq '^polkit([[:space:]]|$)' /tmp/vacuo-rpm-requires.txt
+          dnf install --setopt=install_weak_deps=False -y "${rpm_file}"
+          rpm -q vacuo
+          rpm -V vacuo
+          vacuoctl --version
+          for binary in /usr/bin/vacuo /usr/bin/vacuoctl /usr/libexec/vacuo-helper; do
+            ldd "${binary}"
+            ! ldd "${binary}" | grep -q 'not found'
+          done
+          test "$(stat -c '%U:%G %a' /usr/libexec/vacuo-helper)" = 'root:root 755'
+
   arch:
-    name: Arch Linux · Qt 6
+    name: Arch Linux package install test
     runs-on: ubuntu-24.04
     container: archlinux:base-devel
     steps:
       - name: Install tools
-        run: pacman -Syu --noconfirm --needed cmake git ninja qt6-base
+        run: pacman -Syu --noconfirm --needed cmake git ninja polkit qt6-base
       - name: Check out source
         uses: actions/checkout@v7
-      - name: Build and test
+        with:
+          fetch-depth: 0
+
+      - name: Create release source and PKGBUILD
+        shell: bash
         run: |
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DVACUO_WARNINGS_AS_ERRORS=ON
-          cmake --build build --parallel
-          ctest --test-dir build --output-on-failure
+          version="$(sed -n 's/.*kVersion = "\([0-9][0-9.]*\)".*/\1/p' include/vacuo/version.hpp)"
+          test -n "${version}"
+          install -d -m 0755 /tmp/vacuo-package
+          git archive --format=tar.gz \
+            --prefix="vacuo-${version}-source/" \
+            --output="/tmp/vacuo-package/vacuo-${version}-source.tar.gz" HEAD
+          source_hash="$(sha256sum "/tmp/vacuo-package/vacuo-${version}-source.tar.gz" | cut -d' ' -f1)"
+          sed -e "s/@VERSION@/${version}/g" -e "s/@SOURCE_SHA256@/${source_hash}/g" \
+            packaging/arch/PKGBUILD.in > /tmp/vacuo-package/PKGBUILD
+          echo "VERSION=${version}" >> "$GITHUB_ENV"
+
+      - name: Build package as an unprivileged user
+        run: |
+          useradd --create-home builder
+          chown -R builder:builder /tmp/vacuo-package
+          runuser -u builder -- bash -lc \
+            'cd /tmp/vacuo-package && LC_ALL=C makepkg --cleanbuild --noconfirm'
+
+      - name: Verify and install Arch package
+        run: |
+          package_file="/tmp/vacuo-package/vacuo-${VERSION}-1-x86_64.pkg.tar.zst"
+          test -f "${package_file}"
+          pacman -Qip "${package_file}"
+          pacman -Qlp "${package_file}" | tee /tmp/vacuo-package-files.txt
+          grep -q 'usr/bin/vacuo$' /tmp/vacuo-package-files.txt
+          grep -q 'usr/bin/vacuoctl$' /tmp/vacuo-package-files.txt
+          grep -q 'usr/lib/vacuo/vacuo-helper$' /tmp/vacuo-package-files.txt
+          pacman -U --noconfirm "${package_file}"
+          pacman -Q vacuo
+          pacman -Qkk vacuo
+          vacuoctl --version
+          for binary in /usr/bin/vacuo /usr/bin/vacuoctl /usr/lib/vacuo/vacuo-helper; do
+            ldd "${binary}"
+            ! ldd "${binary}" | grep -q 'not found'
+          done
+          test "$(stat -c '%U:%G %a' /usr/lib/vacuo/vacuo-helper)" = 'root:root 755'
