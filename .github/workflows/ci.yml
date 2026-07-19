@@ -60,6 +60,7 @@ jobs:
           tree_file="$(find package-output -maxdepth 1 -type f -name '*.tar.gz' -print -quit)"
           test -n "${deb_file}"
           test -n "${tree_file}"
+          deb_file="$(realpath "${deb_file}")"
           dpkg-deb --info "${deb_file}"
           dpkg-deb --contents "${deb_file}"
           sudo apt-get install --no-install-recommends -y "${deb_file}"
@@ -152,6 +153,7 @@ jobs:
           version="$(sed -n 's/.*kVersion = "\([0-9][0-9.]*\)".*/\1/p' include/vacuo/version.hpp)"
           test -n "${version}"
           install -d -m 0755 /tmp/vacuo-package
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git archive --format=tar.gz \
             --prefix="vacuo-${version}-source/" \
             --output="/tmp/vacuo-package/vacuo-${version}-source.tar.gz" HEAD
